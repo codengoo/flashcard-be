@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('Flashcard API')
     .setDescription('The Flashcard application APIs')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
