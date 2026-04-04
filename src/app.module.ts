@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SettingsModule } from './settings/settings.module';
+import { GoogleSheetModule } from './shared/google-sheet/google-sheet.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SettingsModule } from './settings/settings.module';
       inject: [ConfigService],
     }),
     SettingsModule,
+    GoogleSheetModule,
   ],
   controllers: [AppController],
   providers: [AppService],

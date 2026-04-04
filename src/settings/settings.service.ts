@@ -19,9 +19,15 @@ export class SettingsService {
     return setting;
   }
 
-  async updateSetting(userId: string, updateSettingDto: UpdateSettingDto): Promise<Setting> {
+  async updateSetting(
+    userId: string,
+    updateSettingDto: UpdateSettingDto,
+  ): Promise<Setting> {
     const setting = await this.settingModel
-      .findOneAndUpdate({ userId }, updateSettingDto, { new: true, upsert: true })
+      .findOneAndUpdate({ userId }, updateSettingDto, {
+        new: true,
+        upsert: true,
+      })
       .exec();
     return setting;
   }
