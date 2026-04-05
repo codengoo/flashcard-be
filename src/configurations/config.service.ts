@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService as NestConfig } from '@nestjs/config';
-import * as config from 'config';
+const config = require('config');
 require('dotenv').config();
 
 @Injectable()
@@ -23,10 +23,7 @@ export class ConfigService {
         CLIENT_SECRET: this.configService.getOrThrow<string>(
           'GOOGLE_CLIENT_SECRET',
         ),
-        CLIENT_ID:
-          this.configService.get<string>('GOOGLE_CLIENT_ID') ||
-          config.get('google.client_id') ||
-          '',
+        CLIENT_ID: this.configService.getOrThrow<string>('GOOGLE_CLIENT_ID'),
         CALLBACK_URL:
           this.configService.get<string>('GOOGLE_CALLBACK_URL') ||
           config.get('google.callback_url') ||

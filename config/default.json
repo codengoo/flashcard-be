@@ -2,5 +2,8 @@
   "mongodb": {
     "uri": "mongodb://localhost:27017/flashcard"
   },
-  "jwt": {}
+  "jwt": {},
+  "google": {
+    "callback_url": "http://localhost:3000"
+  }
 }
