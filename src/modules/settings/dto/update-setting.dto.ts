@@ -30,4 +30,20 @@ export class UpdateSettingDto {
   @IsOptional()
   @IsBoolean()
   notificationsEnabled?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Bật lấy dataset từ Google Sheet',
+    example: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  dataset_sheet_enable?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'ID của Google Sheet',
+    example: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+  })
+  @IsOptional()
+  @IsString()
+  dataset_sheet_id?: string;
 }

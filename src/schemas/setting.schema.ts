@@ -19,6 +19,12 @@ export class Setting {
 
   @Prop({ default: true })
   notificationsEnabled: boolean;
+
+  @Prop({ default: false })
+  dataset_sheet_enable: boolean;
+
+  @Prop({ required: false })
+  dataset_sheet_id: string;
 }
 
 export const SettingSchema = SchemaFactory.createForClass(Setting);

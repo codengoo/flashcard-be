@@ -1,10 +1,7 @@
 export enum PermissionEnum {
   // Settings
-  ReadSettingsAdmin = 'read:settings:admin',
-  UpdateSettingsAdmin = 'update:settings:admin',
-
-  // Users
-  ManageUsers = 'manage:users',
+  ReadSettings = 'settings:read',
+  UpdateSettings = 'settings:modify',
 
   // Roles
   ModifyRoles = 'roles:modify',
