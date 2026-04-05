@@ -49,21 +49,38 @@ Module xác thực người dùng qua Google OAuth 2.0 và phát hành JWT để
 | HTTP Method | Endpoint                | Mô tả |
 | ----------- | ----------------------- | ----- |
 | `GET`       | `/auth/google`          | Chuyển hướng trình duyệt đến trang đăng nhập Google. |
-| `GET`       | `/auth/google/callback` | Google gọi lại sau khi người dùng đồng ý. Trả về `accessToken` (JWT). |
-| `GET`       | `/auth/me`              | Lấy thông tin người dùng đang đăng nhập (yêu cầu Bearer token). |
+| `GET`       | `/auth/google/callback` | Google gọi lại sau khi người dùng đồng ý. Thiết lập `access_token` và `refresh_token` dạng HTTPOnly Cookie. |
+| `POST`      | `/auth/refresh`         | Dùng `refresh_token` từ Cookie để cấp lại `access_token` mới và set lại chúng vào Cookie mởi. Gọi khi gặp lỗi 401. |
+| `GET`       | `/auth/me`              | Lấy thông tin người dùng đang đăng nhập (nhận dạng qua `access_token` cookie). |
 
-### Luồng đăng nhập
+### Luồng đăng nhập bằng Cookie & Refresh Token
 
-1. Client điều hướng người dùng tới `GET /auth/google`.
-2. Sau khi người dùng xác nhận trên Google, server nhận callback tại `/auth/google/callback`.
-3. Server tạo hoặc tìm user theo `googleId`, phát hành JWT.
-4. Client lưu `accessToken` và đính kèm vào header `Authorization: Bearer <token>` cho các request tiếp theo.
+1. Client (trình duyệt) gửi request tới `/auth/google` hoặc gọi SDK.
+2. Server xác thực và phản hồi set 2 cookies:
+   - `access_token` (HTTPOnly, 15 phút)
+   - `refresh_token` (HTTPOnly, 7 ngày)
+3. Các request sau từ máy khách tự động đính kèm cookies đi qua các route bảo vệ như `/auth/me`. Server ưu tiên đọc `access_token` từ cookie (hoặc dự phòng Header `Authorization: Bearer <token>`).
+4. **Khi access token hết hạn** (Server trả về `401 Unauthorized`), Client gọi API `POST /auth/refresh`. Server đọc `refresh_token`, cấp phát bộ tokens mới vào cookies và Client tự động thử lại request ban đầu.
 
-### Response `/auth/google/callback`
+### Response `/auth/google/callback` hoặc `/auth/refresh`
 
 ```json
 {
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "message": "Logged in successfully" // Hoặc "Tokens refreshed"
+}
+```
+*Lưu ý: Không trả về token qua body mà gắn trực tiếp vào header `Set-Cookie`.*
+
+### Payload cho `POST /auth/login`
+Khi gọi POST `/auth/login`, Client truyền đầy đủ thông tin:
+```json
+{
+  "googleId": "1234567890",
+  "email": "user@gmail.com",
+  "displayName": "Full Name",
+  "firstName": "Full",
+  "lastName": "Name",
+  "avatar": "https://url..."
 }
 ```
 

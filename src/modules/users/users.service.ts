@@ -32,4 +32,8 @@ export class UsersService {
   async findById(id: string): Promise<UserDocument | null> {
     return this.userModel.findById(id).exec();
   }
+
+  async updateRefreshToken(id: string, refreshToken: string | null): Promise<void> {
+    await this.userModel.findByIdAndUpdate(id, { refreshToken }).exec();
+  }
 }
