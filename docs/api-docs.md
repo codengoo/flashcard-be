@@ -8,10 +8,12 @@ Thông thường, đối với môi trường dev, bạn có thể truy cập **
 
 Module Settings cho phép quản lý cấu hình mặc định hoặc tuỳ chọn riêng của từng user.
 
-| HTTP Method | Endpoint          | Mô tả |
-| ----------- | ----------------- | ----- |
-| `GET`       | `/settings/:userId` | Lấy chi tiết cài đặt của một người dùng theo ID. Nếu người dùng chưa có cấu hình trước đó, ứng dụng sẽ tự tạo một cấu hình mặc định. |
-| `PUT`       | `/settings/:userId` | Cập nhật một số thay đổi trong tuỳ chọn của người dùng hoặc tạo mới. |
+| HTTP Method | Endpoint          | Quyền | Mô tả |
+| ----------- | ----------------- | ----- | ----- |
+| `GET`       | `/settings`       | User, Admin | Lấy cài đặt của người dùng hiện tại (dựa trên JWT). |
+| `PUT`       | `/settings`       | User, Admin | Cập nhật cài đặt của người dùng hiện tại (dựa trên JWT). |
+| `GET`       | `/settings/:userId` | Admin | Lấy chi tiết cài đặt của một người dùng theo ID. |
+| `PUT`       | `/settings/:userId` | Admin | Cập nhật cài đặt của một người dùng theo ID. |
 
 ### Ví dụ Payload Cập nhật:
 ```json

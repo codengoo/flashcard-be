@@ -20,7 +20,7 @@ export class AuthService {
     const jti = uuid();
 
     const accessToken = this.jwtService.sign(
-      { sub: String(user._id), type: 'access' } as JwtPayload,
+      { sub: String(user._id), type: 'access', roles: user.roles } as JwtPayload,
       { expiresIn: config.JWT.TTL_TOKEN },
     );
     const refreshToken = this.jwtService.sign(

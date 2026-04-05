@@ -10,6 +10,7 @@ export interface JwtPayload {
   sub: string;
   type: 'access' | 'refresh';
   jti?: string;
+  roles?: string[];
 }
 
 const cookieExtractor = (req: Request): string | null => {
