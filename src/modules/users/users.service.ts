@@ -30,10 +30,17 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<UserDocument | null> {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id).populate('roles').exec();
   }
 
   async updateJti(id: string, jti: string) {
     await this.userModel.updateOne({ _id: id }, { jti: jti }).exec();
+  }
+
+  async assignRoles(id: string, roles: string[]): Promise<UserDocument | null> {
+    return this.userModel
+      .findByIdAndUpdate(id, { roles }, { new: true })
+      .populate('roles')
+      .exec();
   }
 }

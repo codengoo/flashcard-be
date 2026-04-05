@@ -22,6 +22,8 @@ export class RolesGuard implements CanActivate {
       return false; // Automatically deny if no user or no roles
     }
 
-    return requiredRoles.some((role) => user.roles?.includes(role));
+    return requiredRoles.some((requiredRole) =>
+      user.roles.some((roleObj: any) => roleObj.name === requiredRole || roleObj === requiredRole)
+    );
   }
 }

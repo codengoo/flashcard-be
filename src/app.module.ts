@@ -8,6 +8,8 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { UsersModule } from './modules/users/users.module';
 import { GoogleSheetModule } from './shared';
 import { DatasetModule } from './modules/dataset/dataset.module';
+import { PermissionsModule } from './modules/permissions/permissions.module';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { DatasetModule } from './modules/dataset/dataset.module';
     UsersModule,
     AuthModule,
     DatasetModule,
+    PermissionsModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
