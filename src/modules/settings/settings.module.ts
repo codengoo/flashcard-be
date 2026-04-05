@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Setting, SettingSchema } from '../../schemas/setting.schema';
 import { SettingsController } from './settings.controller';
 import { SettingsService } from './settings.service';
-import { Setting, SettingSchema } from './schemas/setting.schema';
 
 @Module({
   imports: [

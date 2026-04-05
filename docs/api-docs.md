@@ -112,5 +112,28 @@ getSecret(@Req() req: any) {
 
 ---
 
+## 4. Dataset API (`/dataset`)
+
+Module Dataset dùng để xử lý và quản lý các luồng dữ liệu (dataset) tập trung, ví dụ như đọc dữ liệu trực tiếp từ Google Sheet.
+
+| HTTP Method | Endpoint          | Mô tả |
+| ----------- | ----------------- | ----- |
+| `GET`       | `/dataset/get-from-sheet` | Lấy dữ liệu từ Google Sheet dưới dạng mảng 2 chiều. Bắt buộc truyền `spreadsheetId` trong query. Có thể cấu hình thêm `range=` (vd: `Sheet1!A1:D10`). |
+
+### Ví dụ Request:
+`GET /dataset/get-from-sheet?spreadsheetId=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms&range=Class Data!A2:E`
+
+### Ví dụ Response thành công:
+```json
+{
+  "success": true,
+  "data": [
+    ["Alexandra", "Female"],
+    ["Andrew", "Male"]
+  ]
+}
+```
+
+---
 > [!WARNING]
 > Nếu bạn thay đổi logic hệ thống (thêm endpoint mới, thay đổi DTO hay cấu trúc phản hồi), **phải** quay trở lại cập nhật tệp này (`api-docs.md`) và kiểm tra Swagger Annotations.

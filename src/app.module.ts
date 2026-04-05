@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from './database/database.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { SettingsModule } from './settings/settings.module';
-import { GoogleSheetModule } from './shared/google-sheet/google-sheet.module';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './configurations/config.module';
+import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { SettingsModule } from './modules/settings/settings.module';
+import { UsersModule } from './modules/users/users.module';
+import { GoogleSheetModule } from './shared';
+import { DatasetModule } from './modules/dataset/dataset.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from './configurations/config.module';
     GoogleSheetModule,
     UsersModule,
     AuthModule,
+    DatasetModule,
   ],
   controllers: [AppController],
   providers: [AppService],
