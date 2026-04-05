@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
+import { GoogleSheetModule } from '@common/modules';
 import { DatasetController } from './dataset.controller';
 import { DatasetService } from './dataset.service';
-import { GoogleSheetModule } from '../../shared';
 
 @Module({
   imports: [GoogleSheetModule],
   controllers: [DatasetController],
-  providers: [DatasetService]
+  providers: [DatasetService],
 })
 export class DatasetModule {}

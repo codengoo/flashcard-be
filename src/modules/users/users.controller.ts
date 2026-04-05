@@ -4,7 +4,12 @@ import {
   NotFoundException,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { Permissions } from '@common/decorators/permissions.decorator';
+import { PermissionEnum } from '@common/enums/permission.enum';
+import { PermissionsGuard } from '@common/guards/permissions.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AssignRolesDto } from './dto/assign-roles.dto';
 import { UsersService } from './users.service';
 
@@ -12,8 +17,8 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permissions(PermissionEnum.AssignRoles)
   @Post(':id/roles')
   async assignRoles(
     @Param('id') id: string,

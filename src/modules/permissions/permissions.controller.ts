@@ -1,3 +1,6 @@
+import { Permissions } from '@common/decorators';
+import { PermissionEnum } from '@common/enums';
+import { PermissionsGuard } from '@common/guards';
 import {
   Body,
   Controller,
@@ -8,36 +11,36 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/common/enums/role.enum';
-import { RolesGuard } from 'src/common/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { PermissionsService } from './permissions.service';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(Role.Admin)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('permissions')
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
   @Post()
+  @Permissions(PermissionEnum.ModifyPermissions)
   create(@Body() createPermissionDto: CreatePermissionDto) {
     return this.permissionsService.create(createPermissionDto);
   }
 
   @Get()
+  @Permissions(PermissionEnum.ReadPermissions)
   findAll() {
     return this.permissionsService.findAll();
   }
 
   @Get(':id')
+  @Permissions(PermissionEnum.ReadPermissions)
   findOne(@Param('id') id: string) {
     return this.permissionsService.findOne(id);
   }
 
   @Put(':id')
+  @Permissions(PermissionEnum.ModifyPermissions)
   update(
     @Param('id') id: string,
     @Body() updatePermissionDto: UpdatePermissionDto,
@@ -46,6 +49,7 @@ export class PermissionsController {
   }
 
   @Delete(':id')
+  @Permissions(PermissionEnum.ModifyPermissions)
   remove(@Param('id') id: string) {
     return this.permissionsService.remove(id);
   }

@@ -30,7 +30,16 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<UserDocument | null> {
-    return this.userModel.findById(id).populate('roles').exec();
+    return this.userModel
+      .findById(id)
+      .populate({
+        path: 'roles',
+        populate: {
+          path: 'permissions',
+          model: 'Permission',
+        },
+      })
+      .exec();
   }
 
   async updateJti(id: string, jti: string) {
@@ -40,7 +49,13 @@ export class UsersService {
   async assignRoles(id: string, roles: string[]): Promise<UserDocument | null> {
     return this.userModel
       .findByIdAndUpdate(id, { roles }, { new: true })
-      .populate('roles')
+      .populate({
+        path: 'roles',
+        populate: {
+          path: 'permissions',
+          model: 'Permission',
+        },
+      })
       .exec();
   }
 }

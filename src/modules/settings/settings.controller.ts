@@ -3,13 +3,13 @@ import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { SettingsService } from './settings.service';
 import { UpdateSettingDto } from './dto/update-setting.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { Role } from '../../common/enums/role.enum';
+import { PermissionsGuard } from '@common/guards/permissions.guard';
+import { Permissions } from '@common/decorators/permissions.decorator';
+import { PermissionEnum } from '@common/enums/permission.enum';
 
 @ApiTags('Settings')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('settings')
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
@@ -30,14 +30,14 @@ export class SettingsController {
   }
 
   @ApiOperation({ summary: 'Lấy cài đặt của người dùng theo ID (Admin)' })
-  @Roles(Role.Admin)
+  @Permissions(PermissionEnum.ReadSettingsAdmin)
   @Get(':userId')
   async getSetting(@Param('userId') userId: string) {
     return this.settingsService.getSetting(userId);
   }
 
   @ApiOperation({ summary: 'Cập nhật hoặc tạo mới cài đặt của người dùng theo ID (Admin)' })
-  @Roles(Role.Admin)
+  @Permissions(PermissionEnum.UpdateSettingsAdmin)
   @Put(':userId')
   async updateSetting(
     @Param('userId') userId: string,

@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from 'src/configurations';
-import { GoogleSheetService, IMappingPattern } from '../../shared';
+import { GoogleSheetService, IMappingPattern } from '@common/modules';
 
 const transform = [
   { field: 'Word', key: 'word' },
