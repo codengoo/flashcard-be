@@ -1,21 +1,31 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { GoogleSheetService } from '../../shared/google/google-sheet/google-sheet.service';
+import { ConfigService } from 'src/configurations';
+import { GoogleSheetService, IMappingPattern } from '../../shared';
+
+const transform = [
+  { field: 'Word', key: 'word' },
+  { field: 'Meaning', key: 'meaning' },
+  { field: 'Example', key: 'example' },
+] as const satisfies IMappingPattern[];
 
 @Injectable()
 export class DatasetService {
-  constructor(private readonly googleSheetService: GoogleSheetService) {}
+  constructor(
+    private readonly googleSheetService: GoogleSheetService,
+    private readonly config: ConfigService,
+  ) {}
 
-  async getFromSheet(spreadsheetId: string, range?: string) {
+  async getFromSheet(spreadsheetId: string) {
     try {
       const client = await this.googleSheetService.getClient();
-      const sheetRange = range || 'Sheet1';
-      // Return 2D array from sheet
-      return await this.googleSheetService.getDataRaw(
+      const data = await this.googleSheetService.getDataPattern(
         client,
         spreadsheetId,
-        sheetRange,
-        false, // not raw formulas
+        'Card 1',
+        transform,
       );
+
+      return data;
     } catch (error: any) {
       throw new InternalServerErrorException(
         error.message || 'Failed to fetch Google Sheet data',

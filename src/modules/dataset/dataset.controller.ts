@@ -1,10 +1,5 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Query,
-} from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DatasetService } from './dataset.service';
 
 @ApiTags('Dataset')
@@ -19,22 +14,12 @@ export class DatasetController {
     required: true,
     description: 'ID của Google Sheet (nằm trong URL chia sẻ)',
   })
-  @ApiQuery({
-    name: 'range',
-    required: false,
-    description: 'Phạm vi lấy dữ liệu, mặc định là Sheet1',
-    example: 'Sheet1!A1:D10',
-  })
-  @ApiResponse({ status: 200, description: 'Trả về dữ liệu dạng mảng 2 chiều' })
-  async getFromSheet(
-    @Query('spreadsheetId') spreadsheetId: string,
-    @Query('range') range?: string,
-  ) {
+  async getFromSheet(@Query('spreadsheetId') spreadsheetId: string) {
     if (!spreadsheetId) {
       throw new BadRequestException('spreadsheetId is required');
     }
 
-    const data = await this.datasetService.getFromSheet(spreadsheetId, range);
+    const data = await this.datasetService.getFromSheet(spreadsheetId);
     return {
       success: true,
       data,
