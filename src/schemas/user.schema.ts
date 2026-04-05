@@ -24,7 +24,7 @@ export class User {
   avatar: string;
 
   @Prop()
-  refreshToken?: string;
+  jti: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

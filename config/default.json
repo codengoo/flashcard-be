@@ -2,7 +2,12 @@
   "mongodb": {
     "uri": "mongodb://localhost:27017/flashcard"
   },
-  "jwt": {},
+  "jwt": {
+    "ttl_token": 900,
+    "ttl_refresh": 604800,
+    "ttl_token_cookie": 900000,
+    "ttl_refresh_cookie": 604800000
+  },
   "google": {
     "callback_url": "http://localhost:3000/auth/google/callback"
   }

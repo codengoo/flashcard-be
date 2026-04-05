@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService as NestConfig } from '@nestjs/config';
-const config = require('config');
+import config from 'config';
 require('dotenv').config();
 
 @Injectable()
@@ -32,10 +32,16 @@ export class ConfigService {
     };
   }
 
-  getJwtConfig() {
+  getAuthConfig() {
     return {
       JWT: {
         SECRET: this.configService.getOrThrow<string>('JWT_SECRET'),
+        TTL_TOKEN: config.get<number>('jwt.ttl_token'),
+        TTL_REFRESH: config.get<number>('jwt.ttl_refresh'),
+      },
+      COOKIE: {
+        TTL_TOKEN: config.get<number>('jwt.ttl_token_cookie'),
+        TTL_REFRESH: config.get<number>('jwt.ttl_refresh_cookie'),
       },
     };
   }
@@ -44,7 +50,7 @@ export class ConfigService {
     return {
       ...this.getDBConfig(),
       ...this.getGoogleConfig(),
-      ...this.getJwtConfig(),
+      ...this.getAuthConfig(),
     };
   }
 }

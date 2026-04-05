@@ -3,11 +3,11 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Post,
   Req,
   Res,
-  Post,
-  UseGuards,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -16,7 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
-import type { UserDocument } from '../users/schemas/user.schema';
+import { ConfigService } from 'src/configurations';
+import type { UserDocument } from '../../schemas/user.schema';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -24,7 +25,29 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  setupCookie(res: Response, access_token: string, refresh_token: string) {
+    const isSecure = process.env.NODE_ENV === 'production';
+    const config = this.configService.getAuthConfig();
+
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: isSecure,
+      sameSite: 'lax',
+      maxAge: config.COOKIE.TTL_TOKEN,
+    });
+
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      secure: isSecure,
+      sameSite: 'lax',
+      maxAge: config.COOKIE.TTL_REFRESH,
+    });
+  }
 
   @Get('google')
   @UseGuards(GoogleAuthGuard)
@@ -47,23 +70,8 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const user = req.user as UserDocument;
-    const { accessToken, refreshToken } = await this.authService.login(user);
-
-    const isSecure = process.env.NODE_ENV === 'production';
-
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: isSecure,
-      sameSite: 'lax',
-      maxAge: 15 * 60 * 1000, // 15 mins
-    });
-
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: isSecure,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    const token = await this.authService.login(user);
+    this.setupCookie(res, token.accessToken, token.refreshToken);
 
     return { message: 'Logged in successfully' };
   }
@@ -76,28 +84,13 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const token = req.cookies?.refresh_token;
-    if (!token) {
+    const refreshToken = req.cookies?.refresh_token;
+    if (!refreshToken) {
       throw new UnauthorizedException('Refresh token is missing');
     }
 
-    const { accessToken, refreshToken } = await this.authService.refreshToken(token);
-
-    const isSecure = process.env.NODE_ENV === 'production';
-
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: isSecure,
-      sameSite: 'lax',
-      maxAge: 15 * 60 * 1000,
-    });
-
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: isSecure,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    const token = await this.authService.refreshToken(refreshToken);
+    this.setupCookie(res, token.accessToken, token.refreshToken);
 
     return { message: 'Tokens refreshed' };
   }
