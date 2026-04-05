@@ -25,7 +25,16 @@ export class DatasetService {
         transform,
       );
 
-      return data;
+      const enriched = data.map((item: any) => {
+        const word = encodeURIComponent(item.word ?? '');
+        return {
+          ...item,
+          tflat_deeplink: `tflat://lookup?word=${word}`,
+          cambridge_link: `https://dictionary.cambridge.org/dictionary/english/${word}`,
+        };
+      });
+
+      return enriched;
     } catch (error: any) {
       throw new InternalServerErrorException(
         error.message || 'Failed to fetch Google Sheet data',
@@ -33,3 +42,4 @@ export class DatasetService {
     }
   }
 }
+

@@ -40,6 +40,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     if (!user) {
       throw new UnauthorizedException();
     }
+    if (user.isActive === false) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
     return user;
   }
 }

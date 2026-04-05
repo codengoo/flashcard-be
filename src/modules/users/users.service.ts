@@ -29,6 +29,16 @@ export class UsersService {
     return created.save();
   }
 
+  async findAll(): Promise<UserDocument[]> {
+    return this.userModel
+      .find()
+      .populate({
+        path: 'roles',
+        populate: { path: 'permissions', model: 'Permission' },
+      })
+      .exec();
+  }
+
   async findById(id: string): Promise<UserDocument | null> {
     return this.userModel
       .findById(id)
@@ -38,6 +48,19 @@ export class UsersService {
           path: 'permissions',
           model: 'Permission',
         },
+      })
+      .exec();
+  }
+
+  async updateUser(
+    id: string,
+    payload: Partial<Pick<User, 'displayName' | 'isActive'>>,
+  ): Promise<UserDocument | null> {
+    return this.userModel
+      .findByIdAndUpdate(id, payload, { new: true })
+      .populate({
+        path: 'roles',
+        populate: { path: 'permissions', model: 'Permission' },
       })
       .exec();
   }
@@ -59,3 +82,4 @@ export class UsersService {
       .exec();
   }
 }
+

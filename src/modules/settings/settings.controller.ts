@@ -52,7 +52,7 @@ export class SettingsController {
   @ApiOperation({
     summary: 'Cập nhật hoặc tạo mới cài đặt của người dùng theo ID (Admin)',
   })
-  @Permissions(PermissionEnum.UpdateSettings)
+  @Permissions(PermissionEnum.ModifySettings)
   @Put(':userId')
   async updateSetting(
     @Param('userId') userId: string,

@@ -1,7 +1,7 @@
 export enum PermissionEnum {
   // Settings
   ReadSettings = 'settings:read',
-  UpdateSettings = 'settings:modify',
+  ModifySettings = 'settings:modify',
 
   // Roles
   ModifyRoles = 'roles:modify',
@@ -11,4 +11,8 @@ export enum PermissionEnum {
   // Permissions
   ModifyPermissions = 'permissions:modify',
   ReadPermissions = 'permissions:read',
+
+  // Users
+  ReadUsers = 'users:read',
+  ModifyUsers = 'users:modify',
 }
